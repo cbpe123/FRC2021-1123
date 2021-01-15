@@ -42,7 +42,7 @@ public class ShootHighAndAimOnGoal extends CommandBase {
   @Override
   public void initialize() {
     logger.info("got to motor Activate");
-    RobotContainer.getInstance().shooter.SpinMotor(7400);
+    RobotContainer.getInstance().shooter.SpinMotor(RobotContainer.getInstance().DashboardControlSystem.getShooterSpeed());
     RobotContainer.getInstance().intakeSubsystem.IntakeSlowHigh();
     RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
@@ -52,7 +52,7 @@ public class ShootHighAndAimOnGoal extends CommandBase {
   @Override
   public void execute() {
     time++;
-    RobotContainer.getInstance().shooter.SpinMotor(7200);
+    RobotContainer.getInstance().shooter.SpinMotor(RobotContainer.getInstance().DashboardControlSystem.getShooterSpeed());
     if(RobotContainer.getInstance().Gyro.getAngle() < 60 && RobotContainer.getInstance().Gyro.getAngle() > -60
      && RobotContainer.getInstance().Limelight.ifBox() == true){
       if(Aim.isFinished() == false){

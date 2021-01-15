@@ -43,12 +43,18 @@ public class RotateToGoal extends CommandBase {
   @Override
   public void execute() {
       // RobotContainer.getInstance().intakeSubsystem.IntakeSlow();
-      if(RobotContainer.getInstance().Limelight.getX()>0){
+      if(RobotContainer.getInstance().Limelight.getX()>0 && RobotContainer.getInstance().Limelight.getX()<=10){
         RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 1, 0.1);
       }
+       if(RobotContainer.getInstance().Limelight.getX()>10){
+        RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 1, 0.2);
+      }
       
-      if(RobotContainer.getInstance().Limelight.getX()<0){
+      if(RobotContainer.getInstance().Limelight.getX()<0 && RobotContainer.getInstance().Limelight.getX()>= -10){
         RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, -1, 0.1);
+      }
+      if(RobotContainer.getInstance().Limelight.getX()<-10){
+        RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, -1, 0.2);
       }
   }
 

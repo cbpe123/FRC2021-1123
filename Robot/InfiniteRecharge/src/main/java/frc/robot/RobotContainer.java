@@ -65,21 +65,16 @@ public class RobotContainer {
     double throttle = JoystickControlSystem.getThrottle();
   // /** */  if(throttle <= -0.9){
   //     logger.info("returning Autonomous High");
+    logger.info("The Autonomous Number is " + DashboardControlSystem.getAutonomousCommand);
+    if(DashboardControlSystem.getAutonomousCommand == 0){
+      return new AutonomousCommandTest(driveSubsystem);
+    }
+    if(DashboardControlSystem.getAutonomousCommand == 1){
+      return new AutonomousCommandLowGoalShoot(driveSubsystem);
+    }
+
        return new AutonomousHigh(driveSubsystem);
-  //   }
-  //   if(throttle < -0.1 && throttle > -0.9){
-  //     logger.info("returning Autonomous Shoot Balls and PickUp");
-  //     return new AutonomousShootAndPickUpBalls(driveSubsystem);
-  //   }
-  //   if(throttle > 0.1 && throttle < 0.9){
-  //     return new AutonomousCommandLowGoalShootAndMoveMore(driveSubsystem);
-  //   }
-  //   if(throttle >= 0.9){
-  //     logger.info("returning Autonomous Low Goal Shoot");
-  //     return new AutonomousCommandLowGoalShoot(driveSubsystem);
-  //   }
-  //   return new AutonomousCommandTest(driveSubsystem);
-  //   //return new AutonomousHigh(driveSubsystem);
+
    }
 
 

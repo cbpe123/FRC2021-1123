@@ -23,11 +23,24 @@ public class DashboardControlSystem {
   private static NetworkTableEntry teleTime;
   private static NetworkTableEntry endTime;
 
+  private static ShuffleboardTab autonomousTab;
   private static ShuffleboardTab teleopTab;
   private static ShuffleboardTab endgameTab;
+  private static ShuffleboardTab Constants;
 
   public static void initialize() {
     Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
+
+    // autonomousTab = Shuffleboard.getTab("Autonomous")
+    //   .add("Select Autonomous", 0)
+    //   .withWidget(BuiltInWidgets.kNumberSlider)
+    //   .withProperties(Map.of("min", 0, "max", 5))
+    //   .getEntry();
+
+    NetworkTableEntry autonomous = tab.add("Select Autonomous", 0)
+      .getEntry();    
+    NetworkTableEntry shootingSpeed = tab.add("Shooter Motor Speed", 7200)
+      .getEntry();
 
     // TODO: Add controls for autonomous mode
     // ShuffleboardTab Autonomous = Shuffleboard.getTab("Autonomous Tab");
@@ -231,5 +244,11 @@ public class DashboardControlSystem {
   public static void putTimeRemaining(double time){
     teleTime.forceSetDouble(time);
     endTime.forceSetDouble(time);
+  }
+  public double getAutoNumber(){
+    return autonomous.getDouble(-1.0)
+  }
+  public double getShooterSpeed(){
+    return shootingSpeed.getDouble(7200)
   }
 }
