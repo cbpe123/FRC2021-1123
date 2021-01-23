@@ -29,6 +29,7 @@ public class RobotContainer {
   public final ClimberSubsystem Climber = new ClimberSubsystem();
   public final LimelightSubsystem Limelight = new LimelightSubsystem();
   public final GyroSubsystem Gyro = new GyroSubsystem();
+  public final DashboardControlSystem Dashboard = new DashboardControlSystem();
   private int autonomous = 0;
   private String autoString = "";
 

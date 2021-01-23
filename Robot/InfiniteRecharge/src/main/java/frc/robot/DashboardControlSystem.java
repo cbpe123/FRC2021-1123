@@ -25,9 +25,27 @@ public class DashboardControlSystem {
 
   private static ShuffleboardTab teleopTab;
   private static ShuffleboardTab endgameTab;
+  private static ShuffleboardTab testingTab;
+  private ShuffleboardTab ShooterSpeed = Shuffleboard.getTab("ShooterSpeed");
+  private NetworkTableEntry ShooterRPM =
+    ShooterSpeed.add("ShooterRPM", 0.1)
+          .getEntry();
+  private NetworkTableEntry PIDKF =
+    ShooterSpeed.add("PIDKF", 0.0)
+          .getEntry();
+  private NetworkTableEntry PIDKP =
+    ShooterSpeed.add("PIDKP", 0.0)
+                .getEntry();
+  private NetworkTableEntry PIDKI =
+    ShooterSpeed.add("PIDKI", 0.0)
+          .getEntry();
+  private NetworkTableEntry PIDKD =
+    ShooterSpeed.add("PIDKD", 0.0)
+          .getEntry();
+    Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
 
   public static void initialize() {
-    Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
+    
 
     // TODO: Add controls for autonomous mode
     // ShuffleboardTab Autonomous = Shuffleboard.getTab("Autonomous Tab");
@@ -64,6 +82,7 @@ public class DashboardControlSystem {
     motorSpeed.add("Decrease Shooter Motor Speed 500", new DecreaseShooterMotorSpeed500());
     motorSpeed.add("Decrease Shooter Motor Speed 1000", new DecreaseShooterMotorSpeed1000());
     motorSpeed.add("High Goal Speed Set", new SetShooterMotorSpeedHighGoal());
+    motorSpeed.add("Spin Motors Using RPM", new SpinMotorsRPM());
 
     // maxSpeed = motorSpeed.add("Speed Slider", 1)
     //   .withWidget(BuiltInWidgets.kNumberSlider)
@@ -196,6 +215,34 @@ public class DashboardControlSystem {
       .withPosition(0, 2).withSize(2, 1)
       .getEntry();
 
+      testingTab = Shuffleboard.getTab("Testing");
+
+      // ShuffleboardLayout shootingTest = testingTab.getLayout("Shooter Test", BuiltInLayouts.kList)
+      // .withPosition(0, 0).withSize(3, 2)
+      // .withProperties(Map.of("Label Position", "HIDDEN"));
+
+      testingTab.add("Spin Motors: CAN ID 16 & 18", new TestMotorCommand_CAN1618()).withPosition(0, 0).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+  ; 
+      testingTab.add("Shooter Forward Module 3", new ShooterLoadCommand()).withPosition(0, 1).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+  ;
+      testingTab.add("Shooter Reverse Module 2", new ShooterShootCommand()).withPosition(0, 2).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+  ;
+
+      // ShuffleboardLayout intakeTest = testingTab.getLayout("Intake Test", BuiltInLayouts.kList)
+      // .withPosition(6, 0).withSize(3, 2)
+      // .withProperties(Map.of("Label Position", "HIDDEN"));
+
+      testingTab.add("Intake Spin Motors: CAN ID 19", new IntakeCommand()).withPosition(3, 0).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN")); 
+      testingTab.add("Intake Extend Forward Module 2", new ExtendIntakePiston()).withPosition(3,1).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+      testingTab.add("Intake Reverse Module 3", new RetractIntakePiston()).withPosition(3, 2).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+
+
     // TODO: Add controls for end game climb
     // ShuffleboardTab EndGame = Shuffleboard.getTab("Endgame");
     // EndGame.add("Start Climber Motors Together" , new StartClimberMotorsTogetherCommand());
@@ -231,5 +278,30 @@ public class DashboardControlSystem {
   public static void putTimeRemaining(double time){
     teleTime.forceSetDouble(time);
     endTime.forceSetDouble(time);
+  }
+  public double getShooterSetSpeed(){
+    double Speed = ShooterRPM.getDouble(0.5);
+    logger.info("ShooterRPM From Shufleboard" + Speed);
+    return Speed;
+  }
+  public double getShooterPIDKF(){
+    double KF = PIDKF.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KF;
+  }
+  public double getShooterPIDKP(){
+    double KP = PIDKP.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KP;
+  }
+  public double getShooterPIDKI(){
+    double KI = PIDKI.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KI;
+  }
+  public double getShooterPIDKD(){
+    double KD = PIDKD.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KD;
   }
 }
