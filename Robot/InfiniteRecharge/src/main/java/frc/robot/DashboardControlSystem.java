@@ -25,6 +25,10 @@ public class DashboardControlSystem {
 
   private static ShuffleboardTab teleopTab;
   private static ShuffleboardTab endgameTab;
+  private ShuffleboardTab ShooterSpeed = Shuffleboard.getTab("ShooterSpeed");
+  private NetworkTableEntry ShooterRPM =
+    ShooterSpeed.add("ShooterRPM", 1000)
+          .getEntry();
 
   public static void initialize() {
     Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
@@ -64,6 +68,7 @@ public class DashboardControlSystem {
     motorSpeed.add("Decrease Shooter Motor Speed 500", new DecreaseShooterMotorSpeed500());
     motorSpeed.add("Decrease Shooter Motor Speed 1000", new DecreaseShooterMotorSpeed1000());
     motorSpeed.add("High Goal Speed Set", new SetShooterMotorSpeedHighGoal());
+    motorSpeed.add("Spin Motors Using RPM", new SpinMotorsRPM());
 
     // maxSpeed = motorSpeed.add("Speed Slider", 1)
     //   .withWidget(BuiltInWidgets.kNumberSlider)
@@ -231,5 +236,9 @@ public class DashboardControlSystem {
   public static void putTimeRemaining(double time){
     teleTime.forceSetDouble(time);
     endTime.forceSetDouble(time);
+  }
+  public double getShooterSetSpeed(){
+    double Speed = ShooterRPM.getDouble(500);
+    return Speed;
   }
 }

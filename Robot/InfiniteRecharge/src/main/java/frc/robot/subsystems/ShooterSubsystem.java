@@ -239,4 +239,13 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setFireBall(){
     FireBall = true;
   }
+
+  public void setVelocity(int RPM){
+    motorA.set(ControlMode.Velocity, RPM);
+    motorB.set(ControlMode.Follower, Constants.ShooterMotor2CanID);
+    motorA.config_kF(0, 0, ConfigTimeOut);
+    motorA.config_kP(0, 0.3, ConfigTimeOut);
+    motorA.config_kI(0, 0, ConfigTimeOut);
+    motorA.config_kD(0, 0, ConfigTimeOut);
+  }
 }
