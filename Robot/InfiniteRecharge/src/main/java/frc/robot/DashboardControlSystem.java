@@ -25,6 +25,7 @@ public class DashboardControlSystem {
 
   private static ShuffleboardTab teleopTab;
   private static ShuffleboardTab endgameTab;
+  private static ShuffleboardTab testingTab;
   private ShuffleboardTab ShooterSpeed = Shuffleboard.getTab("ShooterSpeed");
   private NetworkTableEntry ShooterRPM =
     ShooterSpeed.add("ShooterRPM", 0.1)
@@ -213,6 +214,34 @@ public class DashboardControlSystem {
       .withProperties(Map.of("min", 0, "max", 135))
       .withPosition(0, 2).withSize(2, 1)
       .getEntry();
+
+      testingTab = Shuffleboard.getTab("Testing");
+
+      // ShuffleboardLayout shootingTest = testingTab.getLayout("Shooter Test", BuiltInLayouts.kList)
+      // .withPosition(0, 0).withSize(3, 2)
+      // .withProperties(Map.of("Label Position", "HIDDEN"));
+
+      testingTab.add("Spin Motors: CAN ID 16 & 18", new TestMotorCommand_CAN1618()).withPosition(0, 0).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+  ; 
+      testingTab.add("Shooter Forward Module 3", new ShooterLoadCommand()).withPosition(0, 1).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+  ;
+      testingTab.add("Shooter Reverse Module 2", new ShooterShootCommand()).withPosition(0, 2).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+  ;
+
+      // ShuffleboardLayout intakeTest = testingTab.getLayout("Intake Test", BuiltInLayouts.kList)
+      // .withPosition(6, 0).withSize(3, 2)
+      // .withProperties(Map.of("Label Position", "HIDDEN"));
+
+      testingTab.add("Intake Spin Motors: CAN ID 19", new IntakeCommand()).withPosition(3, 0).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN")); 
+      testingTab.add("Intake Extend Forward Module 2", new ExtendIntakePiston()).withPosition(3,1).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+      testingTab.add("Intake Reverse Module 3", new RetractIntakePiston()).withPosition(3, 2).withSize(2, 1)
+      .withProperties(Map.of("Label Position", "HIDDEN"));
+
 
     // TODO: Add controls for end game climb
     // ShuffleboardTab EndGame = Shuffleboard.getTab("Endgame");

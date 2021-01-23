@@ -189,6 +189,11 @@ public class ShooterSubsystem extends SubsystemBase {
     Time++;
     SmartDashboard.putNumber("ShooterMotor1 Temperature", motorA.getTemperature());
     SmartDashboard.putNumber("ShooterMotor1 Speed", motorA.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("ShooterMotor1 Velocity", motorA.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("ShooterMotor1 Set Speed from Motor", motorA.getClosedLoopTarget());
+    SmartDashboard.putNumber("ShooterMotor1 Voltage", motorA.getMotorOutputVoltage());
+    SmartDashboard.putNumber("ShooterMotor2 Speed", motorB.getSelectedSensorVelocity());
+
     // motorSetPoint =  DashboardControlSystem.getSliderSpeed();
   }
 
@@ -242,8 +247,9 @@ public class ShooterSubsystem extends SubsystemBase {
     FireBall = true;
   }
 
-  public void setVelocity(int RPM){
-    motorA.set(ControlMode.Velocity, RPM);
+  public void setVelocity(double RPM){
+    motorA.set(ControlMode.Velocity, RPM*1.165);
+
     motorB.set(ControlMode.Follower, Constants.ShooterMotor2CanID);
     motorA.config_kF(0, 0, ConfigTimeOut);
     motorA.config_kP(0, 0.3, ConfigTimeOut);
