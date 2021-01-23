@@ -27,11 +27,24 @@ public class DashboardControlSystem {
   private static ShuffleboardTab endgameTab;
   private ShuffleboardTab ShooterSpeed = Shuffleboard.getTab("ShooterSpeed");
   private NetworkTableEntry ShooterRPM =
-    ShooterSpeed.add("ShooterRPM", 1000)
+    ShooterSpeed.add("ShooterRPM", 0.1)
           .getEntry();
+  private NetworkTableEntry PIDKF =
+    ShooterSpeed.add("PIDKF", 0.0)
+          .getEntry();
+  private NetworkTableEntry PIDKP =
+    ShooterSpeed.add("PIDKP", 0.0)
+                .getEntry();
+  private NetworkTableEntry PIDKI =
+    ShooterSpeed.add("PIDKI", 0.0)
+          .getEntry();
+  private NetworkTableEntry PIDKD =
+    ShooterSpeed.add("PIDKD", 0.0)
+          .getEntry();
+    Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
 
   public static void initialize() {
-    Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
+    
 
     // TODO: Add controls for autonomous mode
     // ShuffleboardTab Autonomous = Shuffleboard.getTab("Autonomous Tab");
@@ -238,7 +251,28 @@ public class DashboardControlSystem {
     endTime.forceSetDouble(time);
   }
   public double getShooterSetSpeed(){
-    double Speed = ShooterRPM.getDouble(500);
+    double Speed = ShooterRPM.getDouble(0.5);
+    logger.info("ShooterRPM From Shufleboard" + Speed);
     return Speed;
+  }
+  public double getShooterPIDKF(){
+    double KF = PIDKF.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KF;
+  }
+  public double getShooterPIDKP(){
+    double KP = PIDKP.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KP;
+  }
+  public double getShooterPIDKI(){
+    double KI = PIDKI.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KI;
+  }
+  public double getShooterPIDKD(){
+    double KD = PIDKD.getDouble(0.5);
+    // logger.info("ShooterRPM From Shufleboard" + Speed);
+    return KD;
   }
 }

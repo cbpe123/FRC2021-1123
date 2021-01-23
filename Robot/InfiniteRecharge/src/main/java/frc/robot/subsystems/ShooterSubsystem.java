@@ -91,8 +91,8 @@ public class ShooterSubsystem extends SubsystemBase {
     //   motorB.set(ControlMode.PercentOutput, 1);
     // }
     // else{
-      motorA.set(ControlMode.PercentOutput, motorSetPoint/10000);
-      motorB.set(ControlMode.PercentOutput, motorSetPoint/10000);
+      motorA.set(ControlMode.PercentOutput, RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
+      motorB.set(ControlMode.PercentOutput, RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     // }
 
     // if(motorA.getSelectedSensorVelocity()<motorSetPoint){
@@ -106,7 +106,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     subsystemActive = true;
 
-    logger.info("Shooter trying to spin at " + motorSetPoint);
+    logger.info("Shooter trying to spin at " + RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     SmartDashboard.putNumber("Shooter Motor 1 RPM ", motorA.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter Motor 2 RPM ", motorB.getSelectedSensorVelocity());
   }
@@ -187,6 +187,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // TODO: Update dashboard motor speed via NetworkTables
     Time++;
+    SmartDashboard.putNumber("ShooterMotor1 Temperature", motorA.getTemperature());
+    SmartDashboard.putNumber("ShooterMotor1 Speed", motorA.getSelectedSensorVelocity());
     // motorSetPoint =  DashboardControlSystem.getSliderSpeed();
   }
 

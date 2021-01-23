@@ -24,7 +24,7 @@ public class SpinShooterMotorsCommand extends CommandBase {
   public void initialize() {
     logger.info("got to Shooter motor Activate");
     // TODO: Retrieve the desired motor speed
-    RobotContainer.getInstance().shooter.SpinMotor(10000);
+    RobotContainer.getInstance().shooter.SpinMotor(RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
   }
 
