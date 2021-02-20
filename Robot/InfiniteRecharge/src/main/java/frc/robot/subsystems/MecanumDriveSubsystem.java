@@ -5,6 +5,7 @@ import frc.robot.drive.AdvancedMecanumDrive;
 
 import java.util.logging.Logger;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import frc.robot.Constants;
 
@@ -20,6 +21,11 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     WPI_TalonFX rearLeft = new WPI_TalonFX(Constants.kRearLeftChannel);
     WPI_TalonFX frontRight = new WPI_TalonFX(Constants.kFrontRightChannel);
     WPI_TalonFX rearRight = new WPI_TalonFX(Constants.kRearRightChannel);
+
+    frontLeft.setNeutralMode(NeutralMode.Brake);
+    rearLeft.setNeutralMode(NeutralMode.Brake);
+    frontLeft.setNeutralMode(NeutralMode.Brake);
+    rearRight.setNeutralMode(NeutralMode.Brake);
 
     m_robotDrive = new AdvancedMecanumDrive(frontLeft, rearLeft, frontRight, rearRight);
     logger.info("The mecanum drive subsystem is initialized.");

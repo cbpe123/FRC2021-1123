@@ -21,6 +21,8 @@ public class ShootCommand extends CommandBase {
   private final Logger logger = Logger.getLogger(this.getClass().getName());
   int time = 0;
   int TimeSinceLastShot = 0;
+  int TimeSinceBallFire = 0;
+  int NumberOfBallsFired = 0;
 
   /**
    * Creates a new ExampleCommand.
@@ -37,7 +39,7 @@ public class ShootCommand extends CommandBase {
   @Override
   public void initialize() {
     logger.info("got to motor Activate");
-    RobotContainer.getInstance().shooter.SpinMotor(7400);
+    RobotContainer.getInstance().shooter.SpinMotor(7200);
     RobotContainer.getInstance().intakeSubsystem.IntakeSlowHigh();
     RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
@@ -47,10 +49,7 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     time++;
-    RobotContainer.getInstance().shooter.SpinMotor(7200);
-    if(time>50){
-      RobotContainer.getInstance().shooter.FireBallAndRetractHigh();
-    }  
+      fireBalls();
       // RobotContainer.getInstance().intakeSubsystem.IntakeSlow();
   }
 
@@ -70,9 +69,17 @@ public class ShootCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(RobotContainer.getInstance().shooter.getNumberOfBallsFired() >= 6){
-      return true;
-    }
     return false;
+  }
+  public void fireBalls(){
+    if (time - TimeSinceBallFire > 40){
+      RobotContainer.getInstance().shooter.LoadBall();
+      NumberOfBallsFired++;
+    }
+
+    if(time - TimeSinceBallFire > 90){
+      RobotContainer.getInstance().shooter.fireBall();
+      TimeSinceBallFire = time;
+    }
   }
 }

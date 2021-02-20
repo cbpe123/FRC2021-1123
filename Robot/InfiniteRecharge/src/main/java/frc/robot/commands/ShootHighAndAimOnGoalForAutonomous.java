@@ -24,6 +24,8 @@ public class ShootHighAndAimOnGoalForAutonomous extends CommandBase {
   int time = 0;
   int TimeSinceLastShot = 0;
   RotateToGoal Aim = new RotateToGoal();
+  int TimeSinceBallFire = 0;
+  int NumberOfBallsFired = 0;
 
   /**
    * Creates a new ExampleCommand.
@@ -56,9 +58,7 @@ public class ShootHighAndAimOnGoalForAutonomous extends CommandBase {
       Aim.execute();
     }
     if(RobotContainer.getInstance().Limelight.ifBox() == false || Aim.isFinished() == true){
-      if(time>50){
-        RobotContainer.getInstance().shooter.FireBallAndRetractHigh();
-      }  
+      fireBalls();
     }
   }
   
@@ -82,5 +82,16 @@ public class ShootHighAndAimOnGoalForAutonomous extends CommandBase {
       return true;
     }
     return false;
+  }
+  public void fireBalls(){
+    if (time - TimeSinceBallFire > 30){
+      RobotContainer.getInstance().shooter.LoadBall();
+      NumberOfBallsFired++;
+    }
+
+    if(time - TimeSinceBallFire > 70){
+      RobotContainer.getInstance().shooter.fireBall();
+      TimeSinceBallFire = time;
+    }
   }
 }

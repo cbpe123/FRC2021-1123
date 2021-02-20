@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import java.util.logging.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotContainer;
 
@@ -42,13 +43,23 @@ public class RotateToGoal extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      SmartDashboard.putNumber("Limelight X Value", RobotContainer.getInstance().Limelight.getX());
+
       // RobotContainer.getInstance().intakeSubsystem.IntakeSlow();
       if(RobotContainer.getInstance().Limelight.getX()>0){
-        RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 1, 0.1);
+        if(RobotContainer.getInstance().Limelight.getX() > 4)
+          RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 1, 0.1);
+        
+        else
+          RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 1, 0.1);
       }
       
       if(RobotContainer.getInstance().Limelight.getX()<0){
+        if(RobotContainer.getInstance().Limelight.getX() > -4)
         RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, -1, 0.1);
+
+        else
+          RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, -1, 0.1);
       }
   }
 

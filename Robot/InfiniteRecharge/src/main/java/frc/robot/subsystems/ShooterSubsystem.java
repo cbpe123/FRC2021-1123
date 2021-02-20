@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ShooterSubsystem extends SubsystemBase {
   private Logger logger = Logger.getLogger(this.getClass().getName());
   private TalonFX motorA = new TalonFX(Constants.ShooterMotor1CanID);
-  private TalonFX motorB = new TalonFX(Constants.ShooterMotor2CanID);
+  // private TalonFX motorB = new TalonFX(Constants.ShooterMotor2CanID);
   private DoubleSolenoid ballRamSolenoid = new DoubleSolenoid(Constants.ShooterRamPCM,
       Constants.ShooterRamForwardModule, Constants.ShooterRamReverseModule);
   private double motorSetPoint = 0.0;
@@ -48,14 +48,18 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     // Wipe any prior motor settings
     motorA.configFactoryDefault();
-    motorB.configFactoryDefault();
+    // motorB.configFactoryDefault();
 
     motorA.setNeutralMode(NeutralMode.Coast);
-    motorB.setNeutralMode(NeutralMode.Coast);
+    // motorB.setNeutralMode(NeutralMode.Coast);
 
     // Set motor direction
-    motorA.setInverted(TalonFXInvertType.CounterClockwise);
-    motorB.setInverted(TalonFXInvertType.Clockwise);
+    //motorA.setInverted(TalonFXInvertType.CounterClockwise);
+
+/* I made motorA clockwise on 2/16/2021 */
+    motorA.setInverted(TalonFXInvertType.Clockwise);
+    
+    // motorB.setInverted(TalonFXInvertType.Clockwise);
 
     // TODO: Set motor current limits
 
@@ -77,8 +81,10 @@ public class ShooterSubsystem extends SubsystemBase {
     // motorA.config_kI(0, 0, ConfigTimeOut);
     // motorA.config_kD(0, 0, ConfigTimeOut);
 
-    motorA.configOpenloopRamp(0.4);
-    motorB.configOpenloopRamp(0.4);
+    motorA.configOpenloopRamp(0);
+    // motorB.configOpenloopRamp(0);
+    motorA.configClosedloopRamp(0);
+    // motorB.configClosedloopRamp(0);
 
   }
 
@@ -91,8 +97,8 @@ public class ShooterSubsystem extends SubsystemBase {
     //   motorB.set(ControlMode.PercentOutput, 1);
     // }
     // else{
-      motorA.set(ControlMode.PercentOutput, motorSetPoint/10000);
-      motorB.set(ControlMode.PercentOutput, motorSetPoint/10000);
+      motorA.set(ControlMode.PercentOutput, RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
+      // motorB.set(ControlMode.PercentOutput, RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     // }
 
     // if(motorA.getSelectedSensorVelocity()<motorSetPoint){
@@ -106,13 +112,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     subsystemActive = true;
 
-    logger.info("Shooter trying to spin at " + motorSetPoint);
+    logger.info("Shooter trying to spin at " + RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     SmartDashboard.putNumber("Shooter Motor 1 RPM ", motorA.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Shooter Motor 2 RPM ", motorB.getSelectedSensorVelocity());
+    //SmartDashboard.putNumber("Shooter Motor 2 RPM ", motorB.getSelectedSensorVelocity());
   }
   public void LowGoalSpin(){
     motorA.set(ControlMode.PercentOutput, 0.2);
-    motorB.set(ControlMode.PercentOutput, 0.2);
+    // motorB.set(ControlMode.PercentOutput, 0.2);
   }
 
   public void fireBall() {
@@ -125,50 +131,6 @@ public class ShooterSubsystem extends SubsystemBase {
     logger.info("Shooter piston retracted.");
   }
 
-  public void FireBallAndRetract(){
-    if(FireBall == true ) {
-      fireBall();
-      FireBall = false;
-      TimeSinceBallFire = Time;
-      BallLoaded = false; 
-      logger.info("Got to Fire Ball in FireBallAndRetract");
-    }
-    
-    if (Time - TimeSinceBallFire > 60 && BallLoaded == false){
-      LoadBall();
-      NumberOfBallsFired++;
-      BallLoaded = true;
-      SmartDashboard.putNumber("Number Of Balls fired to low goal recently ", NumberOfBallsFired);
-      logger.info("Got to Load Ball in FireBallAndRetract");
-    }
-
-    if(Time - TimeSinceBallFire > 160){
-      FireBall = true;
-      logger.info("Got to fireBall Boolean in FireBallAndRetract" + FireBall);
-    }
-  }
-  public void FireBallAndRetractHigh(){
-    if(FireBall == true ) {
-      fireBall();
-      FireBall = false;
-      TimeSinceBallFire = Time;
-      BallLoaded = false; 
-      logger.info("Got to Fire Ball in FireBallAndRetract");
-    }
-    
-    if (Time - TimeSinceBallFire > 60 && BallLoaded == false){
-      LoadBall();
-      NumberOfBallsFired++;
-      BallLoaded = true;
-      SmartDashboard.putNumber("Number Of Balls fired to low goal recently ", NumberOfBallsFired);
-      logger.info("Got to Load Ball in FireBallAndRetract");
-    }
-
-    if(Time - TimeSinceBallFire > 220){
-      FireBall = true;
-      logger.info("Got to fireBall Boolean in FireBallAndRetract" + FireBall);
-    }
-  }
   public int getNumberOfBallsFired(){
     return NumberOfBallsFired;
   }
@@ -179,7 +141,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void Stop() {
     motorA.set(ControlMode.PercentOutput, 0);
-    motorB.set(ControlMode.PercentOutput, 0);
+    // motorB.set(ControlMode.PercentOutput, 0);
     subsystemActive = false;
   }
 
@@ -187,6 +149,13 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // TODO: Update dashboard motor speed via NetworkTables
     Time++;
+    SmartDashboard.putNumber("ShooterMotor1 Temperature", motorA.getTemperature());
+    SmartDashboard.putNumber("ShooterMotor1 Speed", motorA.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("ShooterMotor1 Velocity", motorA.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("ShooterMotor1 Set Speed from Motor", motorA.getClosedLoopTarget());
+    SmartDashboard.putNumber("ShooterMotor1 Voltage", motorA.getMotorOutputVoltage());
+    // SmartDashboard.putNumber("ShooterMotor2 Speed", motorB.getSelectedSensorVelocity());
+
     // motorSetPoint =  DashboardControlSystem.getSliderSpeed();
   }
 
@@ -238,5 +207,26 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   public void setFireBall(){
     FireBall = true;
+  }
+
+  public void setVelocity(double RPM){
+    motorA.set(ControlMode.Velocity, RPM*1.165);
+
+    // motorB.set(ControlMode.Follower, Constants.ShooterMotor1CanID);
+    // motorA.config_kF(0, RobotContainer.getInstance().Dashboard.getShooterPIDKF(), ConfigTimeOut);
+    // motorA.config_kP(0, RobotContainer.getInstance().Dashboard.getShooterPIDKP(), ConfigTimeOut);
+    // motorA.config_kI(0, RobotContainer.getInstance().Dashboard.getShooterPIDKI(), ConfigTimeOut);
+    // motorA.config_kD(0, RobotContainer.getInstance().Dashboard.getShooterPIDKD(), ConfigTimeOut);
+  }
+
+  public void setVelocityOnOff(double RPM){
+    if(motorA.getSelectedSensorVelocity()< RPM){
+      motorA.set(ControlMode.PercentOutput, 1);
+      // motorB.set(ControlMode.PercentOutput, 1);
+    }
+    else{
+      motorA.set(ControlMode.PercentOutput, 0.5);
+      // motorB.set(ControlMode.PercentOutput, 0.5);
+    }
   }
 }

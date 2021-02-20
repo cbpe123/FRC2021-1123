@@ -20,6 +20,8 @@ public class LowerGoalShootForCommandAutonomous extends CommandBase {
   private final Logger logger = Logger.getLogger(this.getClass().getName());
   int time = 0;
   int TimeSinceLastShot = 0;
+  int TimeSinceBallFire = 0;
+  int NumberOfBallsFired = 0;
 
   /**
    * Creates a new ExampleCommand.
@@ -44,11 +46,9 @@ public class LowerGoalShootForCommandAutonomous extends CommandBase {
   @Override
   public void execute() {
     time++;
-    if(time>50){
-      RobotContainer.getInstance().shooter.FireBallAndRetract();
+   fireBalls();
   }
       // RobotContainer.getInstance().intakeSubsystem.IntakeSlow();
-  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -68,5 +68,16 @@ public class LowerGoalShootForCommandAutonomous extends CommandBase {
       return true;
     }
     return false;
+  }
+  public void fireBalls(){
+    if (time - TimeSinceBallFire > 30){
+      RobotContainer.getInstance().shooter.LoadBall();
+      NumberOfBallsFired++;
+    }
+
+    if(time - TimeSinceBallFire > 70){
+      RobotContainer.getInstance().shooter.fireBall();
+      TimeSinceBallFire = time;
+    }
   }
 }

@@ -28,7 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeSolenoid.set(Value.kReverse);
     logger.info("Intake extended.");
     if(Time-StartTime>25){
-      intakeMotor.set(-1);
+      intakeMotor.set(-0.9);
       logger.info("Intake activated.");
     }
   }

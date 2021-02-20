@@ -28,7 +28,6 @@ public class CalibrateGyro extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //logger.info("Increase Motor Speed was called");
     RobotContainer.getInstance().Gyro.calibrateGyro();
     Time++;
   }

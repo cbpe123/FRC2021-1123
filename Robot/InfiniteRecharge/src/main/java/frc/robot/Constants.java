@@ -15,8 +15,8 @@ public final class Constants {
     public static final int kRearRightChannel = 14;
   
     // TODO: Verify these assignment values
-    public static final int ShooterMotor1CanID = 16;
-    public static final int ShooterMotor2CanID = 18;
+    public static final int ShooterMotor1CanID = 18;
+    public static final int ShooterMotor2CanID = 16;
     public static final int ShooterRamPCM = 1;
     public static final int ShooterRamForwardModule = 3; // Don't know which is which for 0:1
     public static final int ShooterRamReverseModule = 2;

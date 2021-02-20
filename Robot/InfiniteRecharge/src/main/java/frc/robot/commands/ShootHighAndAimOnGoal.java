@@ -24,6 +24,8 @@ public class ShootHighAndAimOnGoal extends CommandBase {
   int time = 0;
   int TimeSinceLastShot = 0;
   RotateToGoal Aim = new RotateToGoal();
+  int TimeSinceBallFire = 0;
+  int NumberOfBallsFired = 0;
 
 
   /**
@@ -42,7 +44,7 @@ public class ShootHighAndAimOnGoal extends CommandBase {
   @Override
   public void initialize() {
     logger.info("got to motor Activate");
-    RobotContainer.getInstance().shooter.SpinMotor(7400);
+    RobotContainer.getInstance().shooter.setVelocity(RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     RobotContainer.getInstance().intakeSubsystem.IntakeSlowHigh();
     RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
@@ -52,27 +54,16 @@ public class ShootHighAndAimOnGoal extends CommandBase {
   @Override
   public void execute() {
     time++;
-    RobotContainer.getInstance().shooter.SpinMotor(7200);
-    if(RobotContainer.getInstance().Gyro.getAngle() < 60 && RobotContainer.getInstance().Gyro.getAngle() > -60
-     && RobotContainer.getInstance().Limelight.ifBox() == true){
+    RobotContainer.getInstance().shooter.setVelocity(RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
+    if(RobotContainer.getInstance().Limelight.ifBox() == true){
       if(Aim.isFinished() == false){
         Aim.execute();
       }
       else{
        if(time>50){
-          RobotContainer.getInstance().shooter.FireBallAndRetractHigh();
+          fireBalls();
         }  
       }
-    }
-    else{
-      if(RobotContainer.getInstance().Gyro.getAngle() > 50){
-        RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, -1, 0.3);
-      }
-
-      if(RobotContainer.getInstance().Gyro.getAngle() < -50){
-        RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 1, 0.3);
-      }
-      
     }
   }
 
@@ -84,7 +75,7 @@ public class ShootHighAndAimOnGoal extends CommandBase {
     RobotContainer.getInstance().shooter.LoadBall();
     RobotContainer.getInstance().intakeSubsystem.Stop();
     RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(1);
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(1);
     time = 0;
   }
 
@@ -95,5 +86,16 @@ public class ShootHighAndAimOnGoal extends CommandBase {
       return true;
     }
     return false;
+  }
+  public void fireBalls(){
+    if (time - TimeSinceBallFire > 30){
+      RobotContainer.getInstance().shooter.LoadBall();
+      NumberOfBallsFired++;
+    }
+
+    if(time - TimeSinceBallFire > 70){
+      RobotContainer.getInstance().shooter.fireBall();
+      TimeSinceBallFire = time;
+    }
   }
 }
