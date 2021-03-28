@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -72,5 +72,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // TODO: Update dashboard motor speed via NetworkTables
     Time++;
+    SmartDashboard.putNumber("Current Draw from Intake", intakeMotor.getOutputCurrent());
   }
 }

@@ -46,8 +46,12 @@ public class ShootHighAndAimOnGoal extends CommandBase {
     logger.info("got to motor Activate");
     RobotContainer.getInstance().shooter.setVelocity(RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     RobotContainer.getInstance().intakeSubsystem.IntakeSlowHigh();
-    RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
+    // RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
+    TimeSinceBallFire = 0;
+    NumberOfBallsFired = 0;
+    time = 0;
+    TimeSinceLastShot = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -82,7 +86,7 @@ public class ShootHighAndAimOnGoal extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(RobotContainer.getInstance().shooter.getNumberOfBallsFired() >= 6){
+    if(NumberOfBallsFired >= 6){
       return true;
     }
     return false;

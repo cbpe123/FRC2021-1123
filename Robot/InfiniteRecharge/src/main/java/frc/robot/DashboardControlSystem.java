@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.LimelightSubsystem;
 
 
@@ -28,13 +29,13 @@ public class DashboardControlSystem {
   private static ShuffleboardTab testingTab;
   private ShuffleboardTab ShooterSpeed = Shuffleboard.getTab("ShooterSpeed");
   private NetworkTableEntry ShooterRPM =
-    ShooterSpeed.add("ShooterRPM", 0.1)
+    ShooterSpeed.add("ShooterRPM", 10000)
           .getEntry();
   private NetworkTableEntry PIDKF =
     ShooterSpeed.add("PIDKF", 0.0)
           .getEntry();
   private NetworkTableEntry PIDKP =
-    ShooterSpeed.add("PIDKP", 0.0)
+    ShooterSpeed.add("PIDKP", 0.3)
                 .getEntry();
   private NetworkTableEntry PIDKI =
     ShooterSpeed.add("PIDKI", 0.0)
@@ -42,8 +43,19 @@ public class DashboardControlSystem {
   private NetworkTableEntry PIDKD =
     ShooterSpeed.add("PIDKD", 0.0)
           .getEntry();
+  private NetworkTableEntry GotToAngle = ShooterSpeed.add("GoToAngle", 0.0).getEntry();
+  private NetworkTableEntry DriveSetpoint = ShooterSpeed.add("DriveSetPoint", 0.0).getEntry();
     Logger logger = Logger.getLogger(frc.robot.DashboardControlSystem.class.getName());
 
+    private NetworkTableEntry PositionX =
+    ShooterSpeed.add("Position X", 0.0)
+          .getEntry();
+    private NetworkTableEntry PositionY =
+      ShooterSpeed.add("Position Y", 0.0)
+       .getEntry();
+    private NetworkTableEntry PositionThrottle =
+      ShooterSpeed.add("Position Throttle", 0.0)
+        .getEntry();
   public static void initialize() {
     
 
@@ -109,7 +121,10 @@ public class DashboardControlSystem {
     ramControl.add("Shoot High And Rotate to goal", new ShootHighAndAimOnGoal());
     teleopTab.add("Load Ball", new ShooterLoadCommand());
     teleopTab.add("Shoot Ball", new ShooterShootCommand());
-    teleopTab.add("Spin Wheels Test For On OFF", new SpinShooterMotorsOnOff());
+    // teleopTab.add("Spin Wheels Test For On OFF", new SpinShooterMotorsOnOff());
+    teleopTab.add("Move Forward set amount", new MoveForwardSetAmount());
+    teleopTab.add("drive to position", new MoveToPosition());
+    teleopTab.add("Gyro Rotate", new GyroTurn());
 
     ShuffleboardLayout Misc = teleopTab.getLayout("Misc", BuiltInLayouts.kList)
       .withPosition(6, 0).withSize(2, 2)
@@ -301,5 +316,23 @@ public class DashboardControlSystem {
     double KD = PIDKD.getDouble(0.5);
     // logger.info("ShooterRPM From Shufleboard" + Speed);
     return KD;
+  }
+  public double getGoToAngle(){
+    return GotToAngle.getDouble(0);
+  }
+  public double getDriveSetPoint(){
+    return DriveSetpoint.getDouble(0);
+  }
+
+  public double getPositionX(){
+    return PositionX.getDouble(0);
+  }
+
+  public double getPositionY(){
+    return PositionY.getDouble(0);
+  }
+
+  public double getPositionThrottle(){
+    return PositionThrottle.getDouble(0);
   }
 }

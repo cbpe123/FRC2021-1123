@@ -43,7 +43,11 @@ public class ShootHighAndAimOnGoalForAutonomous extends CommandBase {
   @Override
   public void initialize() {
     logger.info("got to motor Activate");
-    RobotContainer.getInstance().shooter.SpinMotor(7400);
+    RobotContainer.getInstance().shooter.setPValue(RobotContainer.getInstance().Dashboard.getShooterPIDKP());
+    RobotContainer.getInstance().shooter.setForwardGain(RobotContainer.getInstance().Dashboard.getShooterPIDKF());
+    RobotContainer.getInstance().shooter.setIValue(RobotContainer.getInstance().Dashboard.getShooterPIDKI());
+    RobotContainer.getInstance().shooter.setDValue(RobotContainer.getInstance().Dashboard.getShooterPIDKD());
+    RobotContainer.getInstance().shooter.setVelocity(RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     RobotContainer.getInstance().intakeSubsystem.IntakeSlowHigh();
     RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
@@ -53,7 +57,6 @@ public class ShootHighAndAimOnGoalForAutonomous extends CommandBase {
   @Override
   public void execute() {
     time++;
-    RobotContainer.getInstance().shooter.SpinMotor(7200);
     if(Aim.isFinished() == false){
       Aim.execute();
     }
@@ -78,7 +81,7 @@ public class ShootHighAndAimOnGoalForAutonomous extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(RobotContainer.getInstance().shooter.getNumberOfBallsFired() >= 4){
+    if(NumberOfBallsFired >= 4){
       return true;
     }
     return false;

@@ -6,18 +6,22 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 public class JoystickControlSystem {
   public static Joystick driverJoystick;
+  public static XboxController controller;
 
   public static void initialize() {
     Logger logger = Logger.getLogger(frc.robot.JoystickControlSystem.class.getName());
 
     // For convenience reference the subsystems in the container
     driverJoystick = RobotContainer.getInstance().driverJoystick;
+    controller = RobotContainer.getInstance().controller;
+
     MecanumDriveSubsystem driveSubsystem = RobotContainer.getInstance().driveSubsystem;
     GyroSubsystem Gyro = RobotContainer.getInstance().Gyro;
 
@@ -60,10 +64,23 @@ public class JoystickControlSystem {
     logger.info("Driver button 8 bound to shoot.");
     JoystickButton shootButton = new JoystickButton(driverJoystick, 8);    
     shootButton.whenPressed(new ShootOneBallCommand());
+
+    JoystickButton climberUpButton = new JoystickButton(controller, 6);
+    climberUpButton.whenHeld(new StartClimberMotorAUpCommandController());
+
+    JoystickButton climberDownButton = new JoystickButton(controller, 5);
+    climberDownButton.whenHeld(new StartClimberMotorADownCommandController());
+
+    JoystickButton RotateToAngle = new JoystickButton(controller, 1);
+    RotateToAngle.whenPressed(new GyroTurn());
+
   }
 
   public static double getThrottle() {
     return driverJoystick.getThrottle();
     
+  }
+  public static double getClimberThrottle(){
+    return controller.getTriggerAxis(Hand.kRight);
   }
 }

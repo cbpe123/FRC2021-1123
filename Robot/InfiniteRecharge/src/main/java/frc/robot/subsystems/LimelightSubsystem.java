@@ -48,7 +48,7 @@ public class LimelightSubsystem extends SubsystemBase{
   
     public static void getArea() { // Not Really Necessary
       Double area = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
-      SmartDashboard.putNumber("Area", area);
+      // SmartDashboard.putNumber("Area", area);
     }
 
     public double getX(){
@@ -62,7 +62,7 @@ public class LimelightSubsystem extends SubsystemBase{
     public void periodic() {
       DashboardControlSystem.PutIsBox(ifBox());
       getArea();
-      SmartDashboard.putNumber("Limelight X Val for reals", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(.0));
+      // SmartDashboard.putNumber("Limelight X Val for reals", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(.0));
       SmartDashboard.putNumber("Distance To Target Test", getDistance());
     }
 

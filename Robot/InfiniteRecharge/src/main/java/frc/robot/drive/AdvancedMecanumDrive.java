@@ -214,7 +214,7 @@ public class AdvancedMecanumDrive extends RobotDriveBase implements Sendable, Au
       m_reported = true;
     }
     driveCartesian(magnitude * Math.sin(angle * (Math.PI / 180.0)),
-                   magnitude * Math.cos(angle * (Math.PI / 180.0)), zRotation, 0.0);
+                   magnitude * Math.cos(angle * (Math.PI / 180.0)), zRotation, 1.0);
   }
 
 /**

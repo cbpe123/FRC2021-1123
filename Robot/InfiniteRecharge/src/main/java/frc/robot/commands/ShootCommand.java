@@ -32,6 +32,7 @@ public class ShootCommand extends CommandBase {
   public ShootCommand() {
     addRequirements(RobotContainer.getInstance().shooter);
     addRequirements(RobotContainer.getInstance().intakeSubsystem);
+    
     // Use addRequirements() here to declare subsystem dependencies.
     }
 
@@ -39,9 +40,17 @@ public class ShootCommand extends CommandBase {
   @Override
   public void initialize() {
     logger.info("got to motor Activate");
-    RobotContainer.getInstance().shooter.SpinMotor(7200);
+    RobotContainer.getInstance().shooter.setPValue(RobotContainer.getInstance().Dashboard.getShooterPIDKP());
+    RobotContainer.getInstance().shooter.setForwardGain(RobotContainer.getInstance().Dashboard.getShooterPIDKF());
+    RobotContainer.getInstance().shooter.setIValue(RobotContainer.getInstance().Dashboard.getShooterPIDKI());
+    RobotContainer.getInstance().shooter.setDValue(RobotContainer.getInstance().Dashboard.getShooterPIDKD());
+    RobotContainer.getInstance().shooter.setVelocity(RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
     RobotContainer.getInstance().intakeSubsystem.IntakeSlowHigh();
     RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
+    time = 0;
+    TimeSinceLastShot = 0;
+    TimeSinceBallFire = 0;
+    NumberOfBallsFired = 0;
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(3);
   }
 
@@ -59,9 +68,7 @@ public class ShootCommand extends CommandBase {
     logger.info("got to High Goal Shoot Stop");
     RobotContainer.getInstance().shooter.Stop();
     RobotContainer.getInstance().shooter.LoadBall();
-    RobotContainer.getInstance().intakeSubsystem.Stop();
-    RobotContainer.getInstance().shooter.ResetNumberOfBallsFired();
-    
+    RobotContainer.getInstance().intakeSubsystem.Stop();    
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").forceSetNumber(1);
     time = 0;
   }
@@ -69,6 +76,9 @@ public class ShootCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(NumberOfBallsFired > 5){
+      return true;
+    }
     return false;
   }
   public void fireBalls(){

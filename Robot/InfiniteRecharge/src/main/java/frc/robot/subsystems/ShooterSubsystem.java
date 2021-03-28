@@ -113,7 +113,7 @@ public class ShooterSubsystem extends SubsystemBase {
     subsystemActive = true;
 
     logger.info("Shooter trying to spin at " + RobotContainer.getInstance().Dashboard.getShooterSetSpeed());
-    SmartDashboard.putNumber("Shooter Motor 1 RPM ", motorA.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Shooter Motor 1 RPM ", motorA.getSelectedSensorVelocity());
     //SmartDashboard.putNumber("Shooter Motor 2 RPM ", motorB.getSelectedSensorVelocity());
   }
   public void LowGoalSpin(){
@@ -149,13 +149,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // TODO: Update dashboard motor speed via NetworkTables
     Time++;
-    SmartDashboard.putNumber("ShooterMotor1 Temperature", motorA.getTemperature());
-    SmartDashboard.putNumber("ShooterMotor1 Speed", motorA.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("ShooterMotor1 Velocity", motorA.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("ShooterMotor1 Set Speed from Motor", motorA.getClosedLoopTarget());
-    SmartDashboard.putNumber("ShooterMotor1 Voltage", motorA.getMotorOutputVoltage());
-    // SmartDashboard.putNumber("ShooterMotor2 Speed", motorB.getSelectedSensorVelocity());
-
+    // SmartDashboard.putNumber("ShooterMotor1 Temperature", motorA.getTemperature());
+    // SmartDashboard.putNumber("ShooterMotor1 Speed", motorA.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("ShooterMotor1 Velocity", motorA.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("ShooterMotor1 Set Speed from Motor", motorA.getClosedLoopTarget());
+    // SmartDashboard.putNumber("ShooterMotor1 Voltage", motorA.getMotorOutputVoltage());
     // motorSetPoint =  DashboardControlSystem.getSliderSpeed();
   }
 
@@ -219,14 +217,14 @@ public class ShooterSubsystem extends SubsystemBase {
     // motorA.config_kD(0, RobotContainer.getInstance().Dashboard.getShooterPIDKD(), ConfigTimeOut);
   }
 
-  public void setVelocityOnOff(double RPM){
-    if(motorA.getSelectedSensorVelocity()< RPM){
-      motorA.set(ControlMode.PercentOutput, 1);
-      // motorB.set(ControlMode.PercentOutput, 1);
-    }
-    else{
-      motorA.set(ControlMode.PercentOutput, 0.5);
-      // motorB.set(ControlMode.PercentOutput, 0.5);
-    }
-  }
+  // public void setVelocityOnOff(double RPM){
+  //   if(motorA.getSelectedSensorVelocity()< RPM){
+  //     motorA.set(ControlMode.PercentOutput, 1);
+  //     // motorB.set(ControlMode.PercentOutput, 1);
+  //   }
+  //   else{
+  //     motorA.set(ControlMode.PercentOutput, 0.5);
+  //     // motorB.set(ControlMode.PercentOutput, 0.5);
+  //   }
+  // }
 }

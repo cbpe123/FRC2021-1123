@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.XboxController;
 
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -22,6 +23,7 @@ public class RobotContainer {
   private static final Logger logger = Logger.getLogger(frc.robot.RobotContainer.class.getName());
 
   public final Joystick driverJoystick = new Joystick(Constants.kJoystickChannel);
+  public final XboxController controller = new XboxController(Constants.kControllerChannel);
 
   public final MecanumDriveSubsystem driveSubsystem = new MecanumDriveSubsystem();
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
@@ -30,6 +32,7 @@ public class RobotContainer {
   public final LimelightSubsystem Limelight = new LimelightSubsystem();
   public final GyroSubsystem Gyro = new GyroSubsystem();
   public final DashboardControlSystem Dashboard = new DashboardControlSystem();
+  public final SensorsSubsystem Sensors = new SensorsSubsystem();
   private int autonomous = 0;
   private String autoString = "";
 

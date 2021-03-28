@@ -17,6 +17,7 @@ import frc.robot.Constants;
 
 import frc.robot.RobotContainer;
 import frc.robot.DashboardControlSystem;
+import frc.robot.JoystickControlSystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -30,7 +31,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private CANSparkMax motorB = new CANSparkMax(Constants.ClimberMotorRightCanID, MotorType.kBrushless);
   private DoubleSolenoid ClimbSolenoid = new DoubleSolenoid(Constants.ClimberPCM,
       Constants.ClimberSolenoidForward, Constants.ClimberSolenoidReverse);
-  private double motorSetPoint = 1;
+  private double motorSetPoint = 0.5;
   private boolean subsystemActive = false;
 
   int Time = 0;
@@ -151,9 +152,11 @@ public class ClimberSubsystem extends SubsystemBase {
     // if(Timer.getFPGATimestamp()-StartTime>=118){
     //   CloseWinch();
     // }
+    motorSetPoint = JoystickControlSystem.getClimberThrottle()*0.7;
+    SmartDashboard.putNumber("Winch Set Point", motorSetPoint);
     
     int intTime = (int)(135.0-(Timer.getFPGATimestamp()-StartTime));
-    SmartDashboard.putNumber("Time Left", intTime);
+    // SmartDashboard.putNumber("Time Left", intTime);
     DashboardControlSystem.putTimeRemaining(intTime);
     // logger.info("In Climber subsystem periodic");
     Time++;

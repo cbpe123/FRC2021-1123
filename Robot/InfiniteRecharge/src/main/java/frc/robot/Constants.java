@@ -34,4 +34,5 @@ public final class Constants {
     public static final int ClimberSolenoidReverse = 0;
 
     public static final int kJoystickChannel = 0;
+    public static final int kControllerChannel = 1;
 }
