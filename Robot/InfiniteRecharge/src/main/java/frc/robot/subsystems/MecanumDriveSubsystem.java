@@ -39,18 +39,20 @@ public class MecanumDriveSubsystem extends SubsystemBase {
   WPI_TalonFX frontRight = new WPI_TalonFX(Constants.kFrontRightChannel);
   WPI_TalonFX rearRight = new WPI_TalonFX(Constants.kRearRightChannel);
 
-  double XDistanceTraveled = 0;
-  double YDistanceTraveled = 0;
+  // double XDistanceTraveled = 0;
+  // double YDistanceTraveled = 0;
+  int ticksRequired;
+  int ticksCounter = 0;
   double magnitude = 0.2;
   double setX = 0;
   double setY = 0;
-  double angle = 0;
+  int angle = 0;
   double AverageWheelSpeed = 0;
   int hertzCounter = 0;
   DashBoardHelper yDistanceTraveledDashBoard = new DashBoardHelper();
   DashBoardHelper xDistanceTraveledDashBoard = new DashBoardHelper();
   DashBoardHelper angleDashBoard = new DashBoardHelper();
-  
+  int startingPosition = 0;
 
   /**
    * Creates a new MecanumDriveSubsystem.
@@ -76,11 +78,40 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
   }
 
+    int[] Speed = new int[100];
+    int index = 0;
+    String str = "a";
+    int vomits = 0;
+    int lastPosition = frontLeft.getSelectedSensorPosition();
   @Override
   public void periodic() {
+  //   while(false){
+  //   index++;
+  //   if(index > 500){
+  //     logger.info(".");
+  //     index = 0;
+  //   }
+  // }
+    
+  Speed[index] = (frontLeft.getSelectedSensorPosition()-lastPosition);
+    lastPosition = frontLeft.getSelectedSensorPosition();
+    index++;
+    if(index > 99){
+      for (index = 0; index < Speed.length; index++) {
+        str += Speed[index] + " ";
+      }
+      
+        logger.info(str);
+      
+      str = "a";
+      index = 0;
+    }
+
+    // counter =rearLeft.getSelectedSensorPosition();
+    SmartDashboard.putNumber("Drivetrain1 position", frontLeft.getSelectedSensorPosition());
     // This method will be called once per scheduler run
     // TODO: Implement periodic functionality such as updating dashboards/logs
-    yDistanceTraveledDashBoard.updateValue("YDistance Travelled", YDistanceTraveled, 0.5);
+    // yDistanceTraveledDashBoard.updateValue("YDistance Travelled", YDistanceTraveled, 0.5);
     // xDistanceTraveledDashBoard.updateValue("XDistance Travelled", XDistanceTraveled, 0.5);
   }
 
@@ -108,10 +139,10 @@ public class MecanumDriveSubsystem extends SubsystemBase {
   }
 
   public void setDrivePositionMode(){
-  //   frontLeft.setNeutralMode(NeutralMode.Coast);
-  //   rearLeft.setNeutralMode(NeutralMode.Coast);
-  //   frontLeft.setNeutralMode(NeutralMode.Coast);
-  //   rearRight.setNeutralMode(NeutralMode.Coast);
+    frontLeft.setNeutralMode(NeutralMode.Coast);
+    rearLeft.setNeutralMode(NeutralMode.Coast);
+    frontLeft.setNeutralMode(NeutralMode.Coast);
+    rearRight.setNeutralMode(NeutralMode.Coast);
     
     frontLeft.configOpenloopRamp(0.2);
     frontRight.configOpenloopRamp(0.2);
@@ -131,6 +162,8 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     rearRight.configOpenloopRamp(0.0);
   }
 
+  WPI_TalonFX selectedPositionMotor = frontLeft;
+
   public void setAngleFromXY(double x, double y){
     setX = x;
     setY = y;
@@ -146,42 +179,57 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         else
             angle = 180;
     }
-    else if(x >= 0)
-        angle = Math.toDegrees(Math.atan(y/x));
-    else
-        angle = 180 + Math.toDegrees(Math.atan(y/x));
-    angle = angle - 90;
-    if(angle > 180)
-        angle = angle - 360;
+    // else if(x >= 0)
+    //     angle = (int)Math.toDegrees(Math.atan(y/x));
+    // else
+    //     angle = 180 + (int)Math.toDegrees(Math.atan(y/x));
+    // angle = angle - 90;
+    // if(angle > 180)
+    //     angle = angle - 360;
+    else if(x>0 && y>0){
+      angle = -45;
+    }
+    else if(x>0 && y<0){
+      angle = -135;
+      selectedPositionMotor = rearLeft;
+    }
+    else if(x<0 && y>0){
+      angle = 45;
+      selectedPositionMotor = rearLeft;
+    }
+    else if(x<0 && y<0){
+      angle = 135;
+    }
 
     SmartDashboard.putNumber("Angle from set position", angle);
+    ticksRequired = (int)(Math.sqrt(x*x + y*y) * 2048 * 10 / 18); //equation for distance multiplyed by 2048, ticks per rotation,
+    // multiplyed by gearbox and divided by circumference of wheel.
+    startingPosition = selectedPositionMotor.getSelectedSensorPosition();
   }
 
   public void drivePosition(){
     m_robotDrive.drivePolar(magnitude, angle, 0);
 
-    double localAngle = angle + 90;// because of drivePolar
-    double ticksPerTenthSecond = (Math.abs(frontLeft.getSelectedSensorVelocity()) + Math.abs(frontRight.getSelectedSensorVelocity())
-    + Math.abs(rearLeft.getSelectedSensorVelocity()) + Math.abs(rearRight.getSelectedSensorVelocity()))/4;  
+    // int localAngle = angle + 90;// because of drivePolar
     // turnsPerSecond
-    double motorTurnsPerSecond = 10 * ticksPerTenthSecond/2048; // 2048 ticks per turn
-    double wheelAxleTurnsPerSecond = motorTurnsPerSecond /10; //10 to 1 gearbox
-    double inchesPerSecond = wheelAxleTurnsPerSecond * 18.85; // inches per turn
-    SmartDashboard.putNumber("AverageWheelSpeed", AverageWheelSpeed);
-    if(localAngle == 0 || localAngle == 180){  // sideways
-      inchesPerSecond = inchesPerSecond / 5;
-    }
+    // double motorTurnsPerSecond = 10 * ticksPerTenthSecond/2048; // 2048 ticks per turn
+    // double wheelAxleTurnsPerSecond = motorTurnsPerSecond /10; //10 to 1 gearbox
+    // double inchesPerSecond = wheelAxleTurnsPerSecond * 18.85; // inches per turn
 
-    else if(localAngle == 90 || localAngle == 270){ // forwards or backwards
-      inchesPerSecond = inchesPerSecond /1;
-    }
+    // if(localAngle == 0 || localAngle == 180){  // sideways
+    //   ticksPerTenthSecond = ticksPerTenthSecond * 20;
+    // }
+
+    // else if(localAngle == 90 || localAngle == 270){ // forwards or backwards
+    //   ticksPerTenthSecond = ticksPerTenthSecond * 1;
+    // }
     
-    else{ // 45 degree vectors
-      inchesPerSecond = inchesPerSecond * 0.707;
-    }
-    YDistanceTraveled += inchesPerSecond * Math.toDegrees(Math.sin(localAngle)) / 50; //code runs every 20 ms = 50 Hertz
-    XDistanceTraveled += inchesPerSecond * Math.toDegrees(Math.cos(localAngle)) / 50;
-    hertzCounter++;
+    // else{ // 45 degree vectors
+    //   ticksPerTenthSecond = ticksPerTenthSecond * 1.5;
+    // }
+    // YDistanceTraveled += ticksPerTenthSecond * Math.toDegrees(Math.sin(localAngle)) / 50; //code runs every 20 ms = 50 Hertz
+    // XDistanceTraveled += ticksPerTenthSecond * Math.toDegrees(Math.cos(localAngle)) / 50;
+    // hertzCounter++;
     // if(hertzCounter>=25){
     //   SmartDashboard.putNumber("YDistanceTravelled", YDistanceTraveled);
     //   SmartDashboard.putNumber("XDistanceTravelled", XDistanceTraveled);
@@ -193,15 +241,10 @@ public class MecanumDriveSubsystem extends SubsystemBase {
   
 
   public boolean atPoint(){
-    if(Math.abs(XDistanceTraveled) >= Math.abs(setX) && (Math.abs(YDistanceTraveled) >= Math.abs(setY))){
+    if(Math.abs(ticksRequired) < Math.abs(selectedPositionMotor.getSelectedSensorPosition() - startingPosition)){
       return true;
     }
     return false;
-  }
-
-  public void ResetDistanceTraveled(){
-    XDistanceTraveled = 0;
-    YDistanceTraveled = 0;
   }
 
   //Not a good name this is for moving forward a set amount using encoder posistion

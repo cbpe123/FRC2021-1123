@@ -15,6 +15,7 @@ public class MoveToPosition extends CommandBase {
 
   public MoveToPosition() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.getInstance().driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -39,7 +40,6 @@ public class MoveToPosition extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.getInstance().driveSubsystem.ResetDistanceTraveled();
     RobotContainer.getInstance().driveSubsystem.turnOffDrivePositionMode();
     RobotContainer.getInstance().driveSubsystem.driveCartesian(0, 0, 0, 0);
   }
